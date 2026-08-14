@@ -1,4 +1,4 @@
-//Hotel Booking & Room Management system by Syed Shaheer Ali
+//Hotel Booking & Room Management System by Syed Shaheer Ali
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -42,7 +42,7 @@ void addRoom(Room rooms[], int &maxRoom) {
     cout << "Enter Room Type (Single/Double/Suite): ";
     cin.ignore();
     getline(cin, rooms[maxRoom].roomType);
-    cout << "Enter Price Per Night: ";
+    cout << "Enter Price Per Night: $";
     cin >> rooms[maxRoom].pricePerNight;
     rooms[maxRoom].isAvailable = true;
 
@@ -69,9 +69,9 @@ void searchRoom(Room rooms[], int count) {
     int roomInput;
     bool found = false;
 
-    cout << "\nEnter Room Number you wish to choose(1-100): ";
+    cout << "\nEnter Room Number you wish to choose: ";
     cin >> roomInput;
-    while (roomInput < 1 || roomInput > 100) {
+    while (roomInput <= 0) {
         cout << "\nInvalid Room Number. Please try again: ";
         cin >> roomInput;
     }
@@ -91,13 +91,13 @@ void searchRoom(Room rooms[], int count) {
     }
 }
 
-void updateAvailablitiy(Room rooms[], int &count) {
+void updateAvailability(Room rooms[], int &count) {
     int roomInput;
     int choiceInput;
 
     cout << "\nEnter room no. to change its availability: ";
     cin >> roomInput;
-    while (roomInput < 1 || roomInput > 100) {
+    while (roomInput <= 0) {
         cout << "\nInvalid Room Number. Please try again: ";
         cin >> roomInput;
     }
@@ -105,10 +105,10 @@ void updateAvailablitiy(Room rooms[], int &count) {
         if (rooms[i].roomNum == roomInput) {
             if (rooms[i].isAvailable) {
                 cout << "\nStatus: Room No. " << rooms[i].roomNum << " is Available.";
-                cout << "\nPress 1 to set it to occupied(not available), or 0 to exit.";
+                cout << "\nPress 1 to set it to occupied(not available), or 0 to exit: ";
                 cin >> choiceInput;
                 while (choiceInput < 0 || choiceInput > 1 ) {
-                    cout << "\nInvalid Input! Press 1 to set it to occupied, or 0 to exit.";
+                    cout << "\nInvalid Input! Press 1 to set it to occupied, or 0 to exit: ";
                     cin >> choiceInput;
                 }
                 if (choiceInput == 1) {
@@ -117,10 +117,10 @@ void updateAvailablitiy(Room rooms[], int &count) {
             }
             else {
                 cout << "\nStatus: Room No. " << rooms[i].roomNum << " is Not Available.";
-                cout << "\nPress 1 to set it to unoccupied(available), or 0 to exit.";
+                cout << "\nPress 1 to set it to unoccupied(available), or 0 to exit: ";
                 cin >> choiceInput;
                 while (choiceInput < 0 || choiceInput > 1 ) {
-                    cout << "\nInvalid Input! Press 1 to set it to occupied, or 0 to exit.";
+                    cout << "\nInvalid Input! Press 1 to set it to unoccupied, or 0 to exit: ";
                     cin >> choiceInput;
                 }
                 if (choiceInput == 1) {
@@ -153,9 +153,12 @@ void loadRooms (Room arr[], int &count) {
     ifstream file("rooms.txt");
     if (file.is_open()) {
         if (file >> count) {
+            if (count > 100)
+                count = 100; // safety bound
             for (int i = 0; i < count; i++) {
                 file >> arr[i].roomNum;
-                file >> arr[i].roomType;
+                file.ignore(); // clearing newline before getline
+                getline(file, arr[i].roomType);
                 file >> arr[i].pricePerNight;
                 file >> arr[i].isAvailable;
             }
@@ -235,6 +238,8 @@ void loadGuests (Guest arr[], int &count) {
     ifstream file("guests.txt");
     if (file.is_open()) {
         if (file >> count) {
+            if (count > 100)
+                count = 100; // safety bound
             for (int i = 0; i < count; i++) {
                 file >> arr[i].guestID;
                 file.ignore();
@@ -252,8 +257,8 @@ void loadGuests (Guest arr[], int &count) {
 }
 
 //Billing
-float calculateBill(float pricePerNight, int nights) {
-    float total = pricePerNight * nights;
+double calculateBill(double pricePerNight, int nights) {
+    double total = pricePerNight * nights;
     return total * 1.05; // 5% tax
 }
 
@@ -281,6 +286,8 @@ void loadBookings (Booking bookings[], int &count) {
     ifstream file("bookings.txt");
     if (file.is_open()) {
         if (file >> count) {
+            if (count > 100)
+                count = 100; // safety bound
             for (int i = 0; i < count; i++) {
                 file >> bookings[i].bookingID;
                 file >> bookings[i].roomNum;
@@ -298,15 +305,20 @@ void loadBookings (Booking bookings[], int &count) {
 }
 
 void makeBooking (Room rooms[], Booking bookings[], Guest guests[], int &roomcount, int &bookingcount, int &guestcount) {
+    if (bookingcount >= 100) {
+        cout << "\nError: Maximum booking database capacity reached!\n";
+        return;
+    }
+
     int guestchoice;
-    float currentRoomPrice = 100;
+    double currentRoomPrice = 100;
 
     cout << "\n===Welcome to the Skyline Hotel!===\n";
     cout << "\n1. Existing Guest";
     cout << "\n2. New Guest";
     cin >> guestchoice;
     while (guestchoice < 1 || guestchoice > 2) {
-        cout << "\nInvalid Option! Re-enter your choice.";
+        cout << "\nInvalid Option! Re-enter your choice: ";
         cin >> guestchoice;
     }
     if (guestchoice == 1) {
@@ -344,6 +356,10 @@ void makeBooking (Room rooms[], Booking bookings[], Guest guests[], int &roomcou
     cin >> bookings[bookingcount].guestID;
     cout << "\nStay In Nights(1-10): ";
     cin >> bookings[bookingcount].nights;
+    while (bookings[bookingcount].nights < 1 || bookings[bookingcount].nights > 10) {
+        cout << "\nInvalid input. Enter nights between 1 and 10: ";
+        cin >> bookings[bookingcount].nights;
+    }
 
     bookings[bookingcount].totalBill = calculateBill(currentRoomPrice, bookings[bookingcount].nights);
     cout << "\nTotal Bill for the complete stay(5% tax included): $" << bookings[bookingcount].totalBill << endl;
