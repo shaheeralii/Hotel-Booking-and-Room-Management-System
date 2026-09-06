@@ -83,13 +83,22 @@ Double
 
 ## Project Structure
 
+Initial
 ```text
 Hotel-Booking-and-Room-Management-System/
 ├── main.cpp        # Full source code
-├── rooms.txt        # Persisted room data
-├── guests.txt       # Persisted guest data
-├── bookings.txt     # Persisted booking data
+├── .gitignore        # Excludes generated and unnecessary files from Git
 └── README.md
+```
+After running program locally
+```text
+Hotel-Booking-and-Room-Management-System/
+├── main.cpp        # Full source code
+├── .gitignore      # Excludes generated and unnecessary files from Git
+├── rooms.txt       # Generated room data
+├── guests.txt      # Generated guest data
+├── bookings.txt    # Generated booking data
+└── README.md       # Project documentation
 ```
 
 ## Build & Run
