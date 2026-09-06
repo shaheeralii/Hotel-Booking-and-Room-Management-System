@@ -1,0 +1,70 @@
+# =========================
+# Compiled Binaries & Objects
+# =========================
+*.o
+*.obj
+*.out
+*.exe
+*.bin
+*.app
+
+# =========================
+# Debug Symbols & Profiling
+# =========================
+*.dSYM/
+*.pdb
+*.ilk
+
+# =========================
+# Runtime / Data Storage
+# =========================
+# Generated automatically by the program
+rooms.txt
+guests.txt
+bookings.txt
+
+# Logs & temporary files
+*.log
+*.tmp
+
+# =========================
+# CMake / Build Artifacts
+# =========================
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+compile_commands.json
+cmake-build-*/
+
+# =========================
+# IDEs & Editors
+# =========================
+
+# Visual Studio Code
+.vscode/
+
+# Visual Studio
+.vs/
+*.sln.docstates
+*.user
+*.suo
+
+# CLion / JetBrains
+.idea/
+
+# Code::Blocks
+*.cbp
+*.depend
+*.layout
+
+# Dev-C++
+*.win
+*.layout
+
+# =========================
+# OS Generated Files
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
